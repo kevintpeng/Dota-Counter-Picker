@@ -1,6 +1,4 @@
 import urllib2
-import io
-import re
 import csv
 
 class DotaDumper():
@@ -11,12 +9,14 @@ class DotaDumper():
             for i in range(0, self.list_length):
                 self.hero_list[i] = self.hero_list[i].lower().replace(" ", "-").translate(None,"'").replace("\n", "")
 
+    # Writes the table of match-up data into a csv file
     def write_table(self):
         with open ("data.csv", "wb+") as f_out:
             csvwriter = csv.DictWriter(f_out, fieldnames = self.hero_list)
             csvwriter.writeheader()
             for i in range(0, self.list_length):
                 csvwriter.writerow(self.save_source_code(self.hero_list[i]))
+                print int(i)/ int(self.list_length)
 
     # Fetches the source code for the matchup page of the passed hero
     def save_source_code(self, hero):
@@ -24,13 +24,12 @@ class DotaDumper():
         source_code = response.read()
         row = {}
         for match_up in self.hero_list:
-            index = source_code.index(match_up)
+            index = source_code.index(match_up+'"')
             if hero == match_up:
                 row[match_up] = ""
             else:
                 row[match_up] = self.get_val(source_code, index)
         return row
-
 
     # gets the match-up value at the passed index
     def get_val(self, source_code, index):
