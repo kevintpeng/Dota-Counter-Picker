@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>HeroSelect</class>
+ <widget class="QMainWindow" name="HeroSelect">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>272</width>
+    <height>270</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>HeroSelect</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QLabel" name="label">
+        <property name="font">
+         <font>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Select the Enemy Heroes</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="hero1">
+        <item>
+         <property name="text">
+          <string>Abaddon</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Alchemist</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Ancient Apparation</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Anti-Mage</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Axe</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="hero2"/>
+      </item>
+      <item>
+       <widget class="QComboBox" name="hero3"/>
+      </item>
+      <item>
+       <widget class="QComboBox" name="hero4"/>
+      </item>
+      <item>
+       <widget class="QComboBox" name="hero5"/>
+      </item>
+      <item>
+       <widget class="QPushButton" name="calculate_button">
+        <property name="text">
+         <string>Calculate</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>272</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionDump_Data"/>
+   </widget>
+   <addaction name="menuFile"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionDump_Data">
+   <property name="text">
+    <string>Update Data</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

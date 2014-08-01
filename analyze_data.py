@@ -1,5 +1,6 @@
 import csv
 import os.path
+import operator
 
 class AnalyzeData():
     def __init__(self):
@@ -37,22 +38,13 @@ class AnalyzeData():
     def analyze(self, values, rows, hero):
         val = values
         for check in self.clean_list:
-            if rows[check][hero] == "":
-                val[check] = 0
-            else:
-                val[check] = float(val[check])+float(rows[check][hero])
+            if rows[check][hero] != "":
+                val[check] = round(float(val[check])+float(rows[check][hero]), 2)
         return val
 
+    def sort(self, values):
+        ret = values
+        ret = sorted(ret.iteritems(), key=operator.itemgetter(1))
+        return ret
 
-analysis = AnalyzeData()
-rows = analysis.read_table()
-values = {}
-for i in range(0,analysis.list_length):
-    values[analysis.clean_list[i]] = 0
-print values
-values = analysis.analyze(values, rows, "meepo")
-values = analysis.analyze(values, rows, "chaos-knight")
-values = analysis.analyze(values, rows, "naga-siren")
-values = analysis.analyze(values, rows, "terrorblade")
-print values
 
