@@ -16,7 +16,7 @@ class DotaDumper():
             csvwriter.writeheader()
             for i in range(0, self.list_length):
                 csvwriter.writerow(self.save_source_code(self.hero_list[i]))
-                print int(i)/ int(self.list_length)
+                print int(i), "/", int(self.list_length)
 
     # Fetches the source code for the matchup page of the passed hero
     def save_source_code(self, hero):
@@ -37,7 +37,8 @@ class DotaDumper():
         val = str(source_code[val_index-6:val_index])
         val = float(val.translate(None,"<td>"))
         return val
-
+'''
 dumper = DotaDumper()
 print dumper.hero_list
 dumper.write_table()
+'''

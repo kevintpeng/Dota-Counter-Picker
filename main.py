@@ -1,15 +1,6 @@
-# -*- coding: utf-8 -*-
-
-# Form implementation generated from reading ui file 'HeroSelect.ui'
-#
-# Created: Fri Aug 01 15:29:13 2014
-#      by: PyQt4 UI code generator 4.11
-#
-# WARNING! All changes made in this file will be lost!
-
 from PyQt4 import QtCore, QtGui
 from analyze_data import AnalyzeData
-
+from dota_dumper import DotaDumper
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
@@ -37,6 +28,7 @@ class Ui_HeroSelect(object):
                 self.clean_list.append(self.hero_list[i].lower().replace(" ", "-").translate(None,"'"))
 
             self.analysis = AnalyzeData()
+            self.dumper = DotaDumper()
             self.rows = self.analysis.read_table()
             self.values = {}
             for i in range(0, self.analysis.list_length):
@@ -95,13 +87,9 @@ class Ui_HeroSelect(object):
         self.menubar.addAction(self.menuFile.menuAction())
         for i in range(0, self.list_length + 1):
             self.hero1.addItem(_fromUtf8(""))
-        for i in range(0, self.list_length + 1):
             self.hero2.addItem(_fromUtf8(""))
-        for i in range(0, self.list_length + 1):
             self.hero3.addItem(_fromUtf8(""))
-        for i in range(0, self.list_length + 1):
             self.hero4.addItem(_fromUtf8(""))
-        for i in range(0, self.list_length + 1):
             self.hero5.addItem(_fromUtf8(""))
 
         self.retranslateUi(HeroSelect)
@@ -111,25 +99,24 @@ class Ui_HeroSelect(object):
         HeroSelect.setWindowTitle(_translate("HeroSelect", "HeroSelect", None))
         self.label.setText(_translate("HeroSelect", "Select the Enemy Heroes", None))
         self.hero1.setItemText(0, _translate("HeroSelect", "", None))
-        for i in range(1, self.list_length + 1):
-            self.hero1.setItemText(i, _translate("HeroSelect", self.hero_list[i-1], None))
         self.hero2.setItemText(0, _translate("HeroSelect", "", None))
-        for i in range(1, self.list_length + 1):
-            self.hero2.setItemText(i, _translate("HeroSelect", self.hero_list[i-1], None))
         self.hero3.setItemText(0, _translate("HeroSelect", "", None))
-        for i in range(1, self.list_length + 1):
-            self.hero3.setItemText(i, _translate("HeroSelect", self.hero_list[i-1], None))
         self.hero4.setItemText(0, _translate("HeroSelect", "", None))
-        for i in range(1, self.list_length + 1):
-            self.hero4.setItemText(i, _translate("HeroSelect", self.hero_list[i-1], None))
         self.hero5.setItemText(0, _translate("HeroSelect", "", None))
         for i in range(1, self.list_length + 1):
+            self.hero1.setItemText(i, _translate("HeroSelect", self.hero_list[i-1], None))
+            self.hero2.setItemText(i, _translate("HeroSelect", self.hero_list[i-1], None))
+            self.hero3.setItemText(i, _translate("HeroSelect", self.hero_list[i-1], None))
+            self.hero4.setItemText(i, _translate("HeroSelect", self.hero_list[i-1], None))
             self.hero5.setItemText(i, _translate("HeroSelect", self.hero_list[i-1], None))
         self.calculate_button.setText(_translate("HeroSelect", "Calculate", None))
         self.calculate_button.clicked.connect(self.calculate)
         self.menuFile.setTitle(_translate("HeroSelect", "File", None))
         self.actionDump_Data.setText(_translate("HeroSelect", "Update Data", None))
+        self.actionDump_Data.triggered.connect(self.fetch_data)
 
+    def fetch_data(self):
+        self.dumper.write_table()
     def calculate(self):
         for i in range(0, self.analysis.list_length):
                 self.values[self.analysis.clean_list[i]] = 0
