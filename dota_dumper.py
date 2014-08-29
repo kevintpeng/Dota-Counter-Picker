@@ -1,3 +1,7 @@
+# DATA DUMPER
+# -----------------------------
+# Fetches and parses data from Dotabuff and saves it in a csv file.
+
 import urllib2
 import csv
 
@@ -16,7 +20,7 @@ class DotaDumper():
             csvwriter.writeheader()
             for i in range(0, self.list_length):
                 csvwriter.writerow(self.save_source_code(self.hero_list[i]))
-                print int(i+1), "/", int(self.list_length)
+                print "Writing:", int(i+1), "/", int(self.list_length)
             print "Data is fully updated."
 
     # Fetches the source code for the matchup page of the passed hero
@@ -38,8 +42,3 @@ class DotaDumper():
         val = str(source_code[val_index-6:val_index])
         val = float(val.translate(None,"<td>"))
         return val
-'''
-dumper = DotaDumper()
-print dumper.hero_list
-dumper.write_table()
-'''

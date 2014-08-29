@@ -1,3 +1,7 @@
+# MAIN FILE
+#-----------------------------------------------------
+# Run this file to launch the GUI and use the program.
+
 from PyQt4 import QtCore, QtGui
 from analyze_data import AnalyzeData
 from dota_dumper import DotaDumper
@@ -17,6 +21,7 @@ except AttributeError:
 
 class Ui_HeroSelect(object):
     def __init__(self):
+        # Will read the list from the text file
         with open("HeroList.txt") as file_list:
             self.hero_list = file_list.readlines()
             self.list_length = len(self.hero_list)
@@ -26,7 +31,7 @@ class Ui_HeroSelect(object):
                 self.hero_list[i] = self.hero_list[i].replace("\n", "")
             for i in range(0, self.list_length):
                 self.clean_list.append(self.hero_list[i].lower().replace(" ", "-").translate(None,"'"))
-
+            # creates objects of the other two classes
             self.analysis = AnalyzeData()
             self.dumper = DotaDumper()
             self.rows = self.analysis.read_table()
@@ -34,7 +39,7 @@ class Ui_HeroSelect(object):
             for i in range(0, self.analysis.list_length):
                 self.values[self.analysis.clean_list[i]] = 0
 
-
+    # GUI definitions
     def setupUi(self, HeroSelect):
         HeroSelect.setObjectName(_fromUtf8("HeroSelect"))
         HeroSelect.resize(272, 270)
@@ -103,6 +108,7 @@ class Ui_HeroSelect(object):
         self.hero3.setItemText(0, _translate("HeroSelect", "", None))
         self.hero4.setItemText(0, _translate("HeroSelect", "", None))
         self.hero5.setItemText(0, _translate("HeroSelect", "", None))
+        # populates the drop down boxes with all the heroes listed
         for i in range(1, self.list_length + 1):
             self.hero1.setItemText(i, _translate("HeroSelect", self.hero_list[i-1], None))
             self.hero2.setItemText(i, _translate("HeroSelect", self.hero_list[i-1], None))
@@ -115,36 +121,50 @@ class Ui_HeroSelect(object):
         self.actionDump_Data.setText(_translate("HeroSelect", "Update Data", None))
         self.actionDump_Data.triggered.connect(self.fetch_data)
 
+    # gets the matchup data from dotabuff
     def fetch_data(self):
         self.dumper.write_table()
+        self.rows = self.analysis.read_table()
+
+    # takes input from the GUI, tests all heroes against the given heroes, and outputs the sum of all the matchup data
     def calculate(self):
+        hero_count = 0
+        hero_list = []
+        found = set()
+        enemy_hero = []
+        hero_list.append(self.hero1.currentIndex())
+        hero_list.append(self.hero2.currentIndex())
+        hero_list.append(self.hero3.currentIndex())
+        hero_list.append(self.hero4.currentIndex())
+        hero_list.append(self.hero5.currentIndex())
+        # removes duplicates and blank hero selection.
+        for i in hero_list:
+            if i == 0:
+                hero_list.pop(i)
+                continue
+            if i not in found:
+                found.add(i)
+                enemy_hero.append(i)
+        # populates the list of values. These values will be the sum of the matchup values of all heroes
         for i in range(0, self.analysis.list_length):
                 self.values[self.analysis.clean_list[i]] = 0
-        if self.hero1.currentIndex() != 0:
-            self.values = self.analysis.analyze(self.values, self.rows, self.clean_list[self.hero1.currentIndex()-1])
-        if self.hero2.currentIndex() != 0:
-            self.values = self.analysis.analyze(self.values, self.rows, self.clean_list[self.hero2.currentIndex()-1])
-        if self.hero3.currentIndex() != 0:
-            self.values = self.analysis.analyze(self.values, self.rows, self.clean_list[self.hero3.currentIndex()-1])
-        if self.hero4.currentIndex() != 0:
-            self.values = self.analysis.analyze(self.values, self.rows, self.clean_list[self.hero4.currentIndex()-1])
-        if self.hero5.currentIndex() != 0:
-            self.values = self.analysis.analyze(self.values, self.rows, self.clean_list[self.hero5.currentIndex()-1])
-        if self.hero1.currentIndex() != 0:
-            self.values.pop(self.clean_list[self.hero1.currentIndex()-1])
-        if self.hero2.currentIndex() != 0:
-            self.values.pop(self.clean_list[self.hero2.currentIndex()-1])
-        if self.hero3.currentIndex() != 0:
-            self.values.pop(self.clean_list[self.hero3.currentIndex()-1])
-        if self.hero4.currentIndex() != 0:
-            self.values.pop(self.clean_list[self.hero4.currentIndex()-1])
-        if self.hero5.currentIndex() != 0:
-            self.values.pop(self.clean_list[self.hero5.currentIndex()-1])
-
+        # adjusts the values by checking input heroes one by one
+        for hero_index in enemy_hero:
+            self.values = self.analysis.analyze(self.values, self.rows, self.clean_list[hero_index-1])
+            hero_count+=1
+        if hero_count != 0:
+            for i in range(0, self.analysis.list_length):
+                self.values[self.analysis.clean_list[i]] = round(self.values[self.analysis.clean_list[i]] -
+                                                                 (self.analysis.average * hero_count), 2)
+        # removes input heroes from output list.
+        for hero_index in enemy_hero:
+            self.values.pop(self.clean_list[hero_index-1])
+        # rounds all final data for output
         ret = self.analysis.sort(self.values)
         print "---------------------"
         for i in range(0, len(self.values)):
             print ret[i]
+
 
 
 if __name__ == "__main__":

@@ -1,3 +1,7 @@
+# ANALYSIS
+# ----------------------------------
+# This class reads the data and analyzes it based on GUI inputs.
+
 import csv
 import os.path
 import operator
@@ -18,6 +22,8 @@ class AnalyzeData():
     def read_table(self):
         # Checks for existence of settings file
         rows = {}
+        counter = 0
+        total = 0
         if not os.path.isfile(self.file_path):
             print "data does not exist yet. Please write the table before analyzing."
         else:
@@ -28,13 +34,21 @@ class AnalyzeData():
                     current_row = []
                     for key, val in row.items():
                         current_row.append((key, val))
-
+                        if val != "":
+                            counter += 1
+                            total += float(val)
                     current_row = dict(current_row)
                     rows[self.clean_list[i]] = current_row
                     i = i + 1
-                    print i, "/", self.list_length
+                    print "Loading:", i, "/", self.list_length
+                self.average = round(total/counter, 2)
+                print "average data value:", self.average
+                print "Data loaded. Application ready."
         return rows
 
+    # for a given hero, checks how all heroes matchup against that hero
+    # adds the matchup value to the current value, creating a list of cumulative
+    # machup data for each hero.
     def analyze(self, values, rows, hero):
         val = values
         for check in self.clean_list:
@@ -42,9 +56,8 @@ class AnalyzeData():
                 val[check] = round(float(val[check])+float(rows[check][hero]), 2)
         return val
 
+    # sorts values
     def sort(self, values):
         ret = values
         ret = sorted(ret.iteritems(), key=operator.itemgetter(1))
         return ret
-
-
